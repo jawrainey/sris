@@ -31,52 +31,56 @@ class SMSService:
         Returns:
             list: contains all the messages for a given number, other empty.
         """
-        for num, messages in self.__check_inbox().iteritems():
+        for num, messages in self.__messages_by_patient().iteritems():
             if num == number:
                 return messages
         return []
 
-    def __check_inbox(self):
+    def __all_sms_from_inbox(self):
         """
-        Obtains ALL messages from the inbox, AND* saves the results to an
-        appropriate data structure.
-
-        *TODO: refactor separate functionality to appropriate methods.
+        Obtains ALL SMS messages from the INBOX for the service.
 
         Returns:
-            list: List of dictionaries containing messages for each mobile num.
+            list: list containing all messages from the INBOX.
 
         Note: There is no simple way to get all messages for a specific number.
-        Instead, we obtain ALL messages in the inbox, then filter it.
+        Instead, we obtain ALL messages in the inbox, then filter it below.
 
-        The structure returned is of the format:
-        [
-         {'01111111111', # e.g. the mobile number is unique key
-          'messages': [
-            {'message': 'Hello world', 'date': '2014-07-15',
-               ...
-              'message': }
-           ]},
-           ...
-         ]
+        An alternative approach, which may be implemented later, is to hook
+        into the POST service provided by the API (which gets notified when
+        an SMS is received). This service can then automagically respond
+        via the REST hook.
 
-         An alternative approach, which may be implemented later, is to hook
-         into the POST service provided by the API (which gets notified when
-         an SMS is received). This service can then automagically respond
-         via the REST hook.
-
-         This has the advantage of not having to manually filter the INBOX, but
-         instead respond when automatically to the user.
-         However, this service then becomes dependant on the REST/POST service.
+        This has the advantage of not having to manually filter the INBOX, but
+        instead respond when automatically to the user.
+        However, this service then becomes dependant on the REST/POST service.
         """
         payload = ({'apiKey': config.API_KEY, 'inbox_id': config.INBOX_ID,
                     'sort_order': 'desc'})  # Latest message first.
         req = requests.post(config.API_RECEIVE_URI, params=payload)
-        all_messages = json.loads(req.text)['messages']
+        return json.loads(req.text)['messages']
 
+    def __messages_by_patient(self):
+        """
+        Filters the list of ALL messages by mobile number.
+
+        Returns:
+            list: List of dictionaries containing messages for each mobile num.
+
+        The structure returned is of the format:
+        [
+         {'01111111111', # e.g. the mobile number is unique key
+          [
+            {'message': 'Hello world', 'date': '2014-07-15'},
+            ...
+            {'message': 'Hello world', 'date': '2014-07-18'},
+           ]
+         },
+        ]
+        """
         import collections
         patient_messages = collections.defaultdict(list)
-        for message in all_messages:
+        for message in self.__all_sms_from_inbox():
             # TODO: Add date (UNIX timestamp) to msg.
             msg = {'message': message['message']}
             patient_messages[message['number']].append(msg)
