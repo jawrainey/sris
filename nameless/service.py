@@ -79,9 +79,13 @@ class SMSService:
         ]
         """
         import collections
+        import datetime
+        import time
+
         patient_messages = collections.defaultdict(list)
         for message in self.__all_sms_from_inbox():
-            # TODO: Add date (UNIX timestamp) to msg.
-            msg = {'message': message['message']}
+            tt = datetime.datetime.strptime(message['date'],
+                                            "%Y-%m-%d %H:%M:%S").timetuple()
+            msg = {'message': message['message'], 'date': time.mktime(tt)}
             patient_messages[message['number']].append(msg)
         return patient_messages

@@ -47,7 +47,7 @@ def __create_new_patient(number):
     sms_session.commit()
 
 
-def __save_message(number, message, status):
+def __save_message(number, message, status, timestamp=None):
     """
     Save the SMS message (sent or received) to the service database.
 
@@ -55,9 +55,15 @@ def __save_message(number, message, status):
         number (str): The mobile number of the patient.
         message (str): The SMS message content.
         status (str): The status of the message, e.g. 'sent' or 'received'.
+        timestamp (int): The UNIX timestamp of the message.
     """
-    sms_session.add(db.sms.Message(mobile=number,
-                                   message=message, status=status))
+    if timestamp:
+        sms_session.add(db.sms.Message(mobile=number, message=message,
+                                       status=status, timestamp=timestamp))
+    else:
+        # Instead of inserting 'None' use the default (current time)
+        sms_session.add(db.sms.Message(mobile=number, message=message,
+                                       status=status))
     sms_session.commit()
 
 
@@ -71,7 +77,7 @@ def __save_messages(number, messages):
     """
     for message in messages:
         print "The message being saved is: " + message['message']
-        __save_message(number, message['message'], 'received')
+        __save_message(number, message['message'], 'received', message['date'])
 
 
 def send_sms_to_new_patients():
@@ -106,7 +112,6 @@ def reply_to_new_sms():
             print "New messages received."
             message = Messenger().ongoing_message()
             SMSService().send_sms(number, message)
-            print "Sending ongoing message."
             # For now, we do not want to save OUR conversation. Just clients.
             __save_message(number, message, 'sent')
             # Save the messages the service do not know about.

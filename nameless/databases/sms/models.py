@@ -25,8 +25,13 @@ class Message(Base):
     """
     __tablename__ = 'messages'
 
+    import datetime
+    import calendar
+
+    now = datetime.datetime.utcnow()  # utcnow as that's what returned by API
+
     id = Column(Integer, primary_key=True)
     mobile = Column(String, ForeignKey('users.mobile'))
     message = Column(String)
-    type = Column(String)  # Used to differentiate between SMS sent/received.
     status = Column(String)  # Used to differentiate between SMS sent/received.
+    timestamp = Column(Integer, default=calendar.timegm(now.timetuple()))
