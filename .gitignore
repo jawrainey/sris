@@ -1,0 +1,5 @@
+spacis/
+.ropeproject/
+db/*
+*pyc
+*.swp
