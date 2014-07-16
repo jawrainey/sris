@@ -29,3 +29,4 @@ class Message(Base):
     mobile = Column(String, ForeignKey('users.mobile'))
     message = Column(String)
     type = Column(String)  # Used to differentiate between SMS sent/received.
+    status = Column(String)  # Used to differentiate between SMS sent/received.

@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from service import SMSService
 from messenger import Messenger
@@ -47,15 +47,17 @@ def __create_new_patient(number):
     sms_session.commit()
 
 
-def __save_message(number, message):
+def __save_message(number, message, status):
     """
     Save the SMS message (sent or received) to the service database.
 
     Args:
         number (str): The mobile number of the patient.
         message (str): The SMS message content.
+        status (str): The status of the message, e.g. 'sent' or 'received'.
     """
-    sms_session.add(db.sms.Message(mobile=number, message=message))
+    sms_session.add(db.sms.Message(mobile=number,
+                                   message=message, status=status))
     sms_session.commit()
 
 
@@ -69,7 +71,7 @@ def __save_messages(number, messages):
     """
     for message in messages:
         print "The message being saved is: " + message['message']
-        __save_message(number, message['message'])
+        __save_message(number, message['message'], 'received')
 
 
 def send_sms_to_new_patients():
@@ -83,7 +85,7 @@ def send_sms_to_new_patients():
         SMSService().send_sms(number, message)
         __create_new_patient(number)
         # TODO: Is it necessary to save the initial message?
-        __save_message(number, message)
+        __save_message(number, message, 'sent')
 
 
 def reply_to_new_sms():
@@ -95,17 +97,22 @@ def reply_to_new_sms():
         number = patient.mobile
         client_messages = SMSService().all_messages(int(number))
         service_messages = sms_session.query(db.sms.Message).filter(
-            db.sms.Message.mobile == number).all()
-        print "Client msgs count, service msgs count, mobile number: %s,%s,%d" \
-            % (str(len(client_messages)), str(len(service_messages)),
-               int(number))
+            and_(db.sms.Message.mobile == number,
+                 db.sms.Message.status == 'received')).all()
+        print "Count of messages for %d in INBOX is: %s\n" \
+              "Count of messages received in the service db is: %s" \
+              % (int(number), len(client_messages), len(service_messages))
         if len(client_messages) > len(service_messages):
+            print "New messages received."
             message = Messenger().ongoing_message()
             SMSService().send_sms(number, message)
+            print "Sending ongoing message."
             # For now, we do not want to save OUR conversation. Just clients.
-            # __save_message(number, message)
+            __save_message(number, message, 'sent')
             # Save the messages the service do not know about.
             messages_to_save = (len(client_messages) - len(service_messages))
+            print "Saving %d message(s) to the database: %s" \
+                % (messages_to_save, client_messages[0:messages_to_save])
             __save_messages(number, client_messages[0:messages_to_save])
 
 if __name__ == "__main__":
