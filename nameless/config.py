@@ -1,11 +1,10 @@
 import os
 _basedir = os.path.abspath(os.path.dirname(__file__))
 # Plugin settings
-DATABASE_NAMES = ['atc', 'nhs', 'sms']
+DATABASE_NAMES = ['atc', 'sms']
 # Using sqlite for local development, will be SQL on production.
 SQLALCHEMY_BINDS = {
     'atc': 'sqlite:///' + os.path.join(_basedir, 'db/atc.db'),
-    'nhs': 'sqlite:///' + os.path.join(_basedir, 'db/nhs.db'),
     'sms': 'sqlite:///' + os.path.join(_basedir, 'db/sms.db')
 }
 
