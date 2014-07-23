@@ -1,0 +1,12 @@
+{
+  "name": "atc",
+  "focus": "alcohol",
+  "downloadURL": "http://sris.co/dl/",
+  "initialQuestion": "Hello, last night you visited the ATC. This is a follow-up message to make sure everything is ok. Are you well?",
+  "dailyQuestions": [
+    {
+      "time": "13:20",
+      "question": "This is the ATC helper. How many units of alcohol did you drink yesterday? 1 unit is a half a pint of beer, small wine or a single shot."
+    }
+  ]
+}

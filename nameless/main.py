@@ -4,6 +4,7 @@ from service import SMSService
 from messenger import Messenger
 from databases.databases import Databases
 import config
+import json
 
 # The client specific database.
 atc_engine = create_engine(config.SQLALCHEMY_BINDS['atc'])
@@ -16,6 +17,12 @@ sms_session = sessionmaker(bind=sms_engine)()
 
 # Use a wrapper to import ALL databases.
 db = Databases()
+# Hard coded: bad times.
+# What if we had multiple client specific config files? (alcohol & obesity)
+with open('./config/atc.json') as f:
+    config = json.load(f)
+# easier to configure later
+messenger = Messenger(config)
 
 
 def __new_patients():
@@ -84,10 +91,10 @@ def send_sms_to_new_patients():
     """
     Sends an 'initial' SMS to new patients of the client.
     """
-    message = Messenger().initial_message()
     # 'New patients' are those that have recently been added
     # to the clients database, which the service does not know.
     for number in __new_patients():
+        message = messenger.initial_message()
         SMSService().send_sms(number, message)
         __create_new_patient(number)
         # TODO: Is it necessary to save the initial message?
@@ -108,9 +115,13 @@ def reply_to_new_sms():
         print "Count of messages for %d in INBOX is: %s\n" \
               "Count of messages received in the service db is: %s" \
               % (int(number), len(client_messages), len(service_messages))
+
+        # TEMPORARY
+        send_sms_at_config_time(number)
+
         if len(client_messages) > len(service_messages):
             print "New messages received."
-            message = Messenger().ongoing_message()
+            message = messenger.ongoing_message()
             SMSService().send_sms(number, message)
             # For now, we do not want to save OUR conversation. Just clients.
             __save_message(number, message, 'sent')
@@ -124,7 +135,7 @@ if __name__ == "__main__":
     from twisted.internet import task
     from twisted.internet import reactor
 
-    when_to_check = 10  # Is in seconds, and low for testing.
+    when_to_check = 30  # Is in seconds, and low for testing.
     # Check nightly for new client patients and automatically SMS.
     task.LoopingCall(send_sms_to_new_patients).start(when_to_check)
     # Check the service SMS INBOX for NEW messages then respond accordingly
