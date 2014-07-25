@@ -131,6 +131,21 @@ def reply_to_new_sms():
                 % (messages_to_save, client_messages[0:messages_to_save])
             __save_messages(number, client_messages[0:messages_to_save])
 
+
+def send_sms_at_config_time(number):
+    """
+    Sends a question/message to a patient at a pre-defined time.
+
+    Args:
+        number (str): The mobile number to send the message.
+    """
+    from datetime import datetime
+    for question in config['dailyQuestions']:
+        if str(datetime.now().time())[0:5] == str(question['time']):
+            # __save_message(number, question['question'], 'sent')
+            SMSService().send_sms(number, question['question'])
+
+
 if __name__ == "__main__":
     from twisted.internet import task
     from twisted.internet import reactor
