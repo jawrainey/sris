@@ -8,5 +8,13 @@
       "time": "13:20",
       "question": "This is the ATC helper. How many units of alcohol did you drink yesterday? 1 unit is a half a pint of beer, small wine or a single shot."
     }
+  ],
+  "interventionQuestions": [
+    "Did you know that only 6.4% of dependent drinkers access treatment? If you need help, text HELP and a support nurse will be in touch.",
+    "Did you know that in 2011 there were 8748 deaths directly related to alcohol in the UK.",
+    "Did you know that 37% of all deaths from liver disease in England are a result of overconsumption of alcohol."
+  ],
+  "positiveResponses": [
+    "This is a general positive response."
   ]
 }

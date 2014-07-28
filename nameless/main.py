@@ -121,7 +121,8 @@ def reply_to_new_sms():
 
         if len(client_messages) > len(service_messages):
             print "New messages received."
-            message = messenger.ongoing_message()
+            message = messenger.respond(number, client_messages[0]['message'])
+            print 'The message being sent to the user is: ' + str(message)
             SMSService().send_sms(number, message)
             # For now, we do not want to save OUR conversation. Just clients.
             __save_message(number, message, 'sent')
@@ -142,6 +143,7 @@ def send_sms_at_config_time(number):
     from datetime import datetime
     for question in config['dailyQuestions']:
         if str(datetime.now().time())[0:5] == str(question['time']):
+            print "Sending SMS to number..." + str(question['question'])
             # __save_message(number, question['question'], 'sent')
             SMSService().send_sms(number, question['question'])
 

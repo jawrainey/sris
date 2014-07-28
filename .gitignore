@@ -3,3 +3,4 @@ spacis/
 *.db
 *pyc
 *.swp
+*.swo

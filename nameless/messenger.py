@@ -1,3 +1,6 @@
+from sentiment import Sentiment
+
+
 class Messenger:
     """
     Generates messages to send to a patient.
@@ -22,35 +25,30 @@ class Messenger:
         print "The initial message is being sent."
         return self.config['initialQuestion']
 
-    def predefined_message(self, time):
+    def respond(self, number, message):
         """
-        ?????
+        Obtains a suitable response from the client defined settings based on
+        the sentiment (positive/negative) of the message that the patient sent.
 
         Args:
-            time (string): ???
+            number (str): The mobile number of the patient.
+            message (str): The last message received from the patient.
 
         Returns:
-            str: ???
+            str: A message to continue the conversation with the patient.
         """
-        return ''
-
-    def ongoing_message(self):
-        """
-        Generates a message suitable for a user based on their history.
-
-        Returns:
-            str: The generated message.
-
-        TODO:
-
-        This method needs to be made intelligent to suggest interventions.
-
-            1. Generate a suitable message based on previous conversations.
-            2. Personalise message through location based & NHS data.
-        """
-        print "The ongoing message is being sent."
+        print "The message from the patient was: %s" % (message)
+        sentiment = Sentiment().determine_sentiment(message)
+        print "The sentiment generated for the response was: %s" % (sentiment)
         import random
-        return self.config['interventionQuestions'][random.randint(0, 1)]
+
+        # TODO:
+        #   - Filter so all interventions/responses are used before repeating.
+        #   - Select a response for the given message (rather than randomly).
+        if sentiment is 'pos':
+            return self.config['positiveResponses'][random.randint(0, 1)]
+        else:
+            return self.config['interventionQuestions'][random.randint(0, 1)]
 
     def __download_url(self):
         """

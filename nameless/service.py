@@ -33,6 +33,8 @@ class SMSService:
         """
         for num, messages in self.__messages_by_patient().iteritems():
             if num == number:
+                print "DEBUG: The number of messages for %d is: %s, and the" \
+                    "content is: %s" % (number, len(messages), str(messages))
                 return messages
         return []
 
