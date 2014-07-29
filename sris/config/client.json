@@ -1,7 +1,4 @@
 {
-  "name": "atc",
-  "focus": "alcohol",
-  "downloadURL": "http://sris.co/dl/",
   "initialQuestion": "Hello, last night you visited the ATC. This is a follow-up message to make sure everything is ok. Are you well?",
   "dailyQuestions": [
     {

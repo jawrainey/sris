@@ -2,8 +2,8 @@ import os
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Database settings
-CLIENT_NAME = 'atc'
-SERVICE_NAME = 'sms'
+CLIENT_NAME = 'client'
+SERVICE_NAME = 'service'
 CLIENT_DB = os.path.join(_basedir, 'sris/db/' + CLIENT_NAME + '.db')
 SERVICE_DB = os.path.join(_basedir, 'sris/db/' + SERVICE_NAME + '.db')
 SQLALCHEMY_BINDS = {

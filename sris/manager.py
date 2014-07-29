@@ -8,7 +8,7 @@ class Manager:
     The middle-man of interaction between messenger and the SMS service.
     """
     def __init__(self):
-        self.config = self.load_config_file()
+        self.config = self.__load_config_file()
         self.messenger = Messenger(self.config)
         self.sms_service = SMSService()
 
@@ -56,7 +56,7 @@ class Manager:
                 self.__save_message(number, message, 'sent')
                 self.sms_service.send(number, message)
 
-    def load_config_file(self):
+    def __load_config_file(self):
         """
         Stores the contents of the client-defined config file to a json object.
 
@@ -77,12 +77,12 @@ class Manager:
         Returns:
             list: Mobile numbers the client knows & the service does not.
         """
-        # ALL numbers obtained from the client (ATC).
-        atc_numbers = db.session.query(models.Patient.mobile).all()
+        # ALL numbers obtained from the client.
+        client_numbers = db.session.query(models.Patient.mobile).all()
         # The numbers the service has to date.
-        have_numbers = db.session.query(models.User.mobile).all()
+        service_numbers = db.session.query(models.User.mobile).all()
         # The numbers the client has, but the service does not.
-        numbers = set(atc_numbers).difference(have_numbers)
+        numbers = set(client_numbers).difference(service_numbers)
         print 'There was %s new patients' % str(len(numbers))
         # Convert SQLAlchemy KeyedTuple to ordinary list.
         return [item.mobile for item in numbers]

@@ -8,7 +8,7 @@ class User(db.Model):
     Note: this is required to 'diff' against the patient database to nightly.
     """
     __tablename__ = 'users'
-    __bind_key__ = 'sms'
+    __bind_key__ = 'service'
 
     mobile = db.Column(db.String, nullable=False, unique=True, primary_key=True)
     messages = db.relationship("Message", cascade="all,delete", backref="users")
@@ -18,10 +18,10 @@ class Message(db.Model):
     """
     Stores SMS messages sent/received to the patient.
     Note: A user table is not required as the mobile number can uniquely
-    identify a user within the client's plugin database (e.g. ATC).
+    identify a user within the client's plugin database.
     """
     __tablename__ = 'messages'
-    __bind_key__ = 'sms'
+    __bind_key__ = 'service'
 
     import datetime
     import calendar
@@ -41,7 +41,7 @@ class Patient(db.Model):
     Note: This is required by each client specific application.
     """
     __tablename__ = 'patients'
-    __bind_key__ = 'atc'
+    __bind_key__ = 'client'
 
     mobile = db.Column(db.String, nullable=False, unique=True, primary_key=True)
     forename = db.Column(db.String, nullable=False)
