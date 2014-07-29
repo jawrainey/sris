@@ -40,21 +40,22 @@ class Manager:
         self.__save_message(number, message, 'sent')
         return self.sms_service.reply(message)
 
-    def send_sms_at_config_time(self, number):
+    def send_daily_sms(self):
         """
-        Sends a question/message to a patient at a pre-defined time.
-
-        Args:
-            number (str): The mobile number to send the message.
+        Sends a question/message to all patients at a pre-defined time.
         """
+        known_patients = [item.mobile for item in
+                          db.session.query(models.Patient.mobile).all()]
         from datetime import datetime
-        for question in self.config['dailyQuestions']:
-            if str(datetime.now().time())[0:5] == str(question['time']):
-                message = question['question']
-                print "Sending a client-defined question (%s) " \
-                    "at a defined time (%s)" % (question['time'], message)
-                self.__save_message(number, message, 'sent')
-                self.sms_service.send(number, message)
+        print "Check to see if daily question needs to be sent."
+        for number in known_patients:
+            for question in self.config['dailyQuestions']:
+                if str(datetime.now().time())[0:5] == str(question['time']):
+                    message = question['question']
+                    print "Sending a client-defined question (%s) " \
+                        "at a defined time (%s)" % (question['time'], message)
+                    self.__save_message(number, message, 'sent')
+                    self.sms_service.send(number, message)
 
     def __load_config_file(self):
         """
