@@ -11,5 +11,8 @@ SQLALCHEMY_BINDS = {
     SERVICE_NAME: 'sqlite:///' + SERVICE_DB
 }
 
+# Service settings
+NEW_PATIENT_CHECK = '10:00'
+
 # Flask specific settings
 DEBUG = True
