@@ -15,10 +15,6 @@ def sms():
     number = request.values.get('From')
     message = request.values.get('Body')
 
-    if not message:
-        print 'No message was sent by the patient...'
-        return ''
-
     if number in known_patients:
         print "Attempting to send SMS response to %s" % (number)
         return Manager().respond({'message': message, 'number': number})
