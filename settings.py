@@ -14,9 +14,10 @@ class Config(object):
     SERVICE_NAME = 'service'
 
     # These need to be set by you!
-    ACCOUNT_SID = ''
-    AUTH_TOKEN = ''
-    NUM = ''
+    ACCOUNT_SID = os.environ.get('ACCOUNT_SID', None)
+    AUTH_TOKEN = os.environ.get('AUTH_TOKEN', None)
+    NUM = os.environ.get('NUM', None)
+
 
 class ProdConfig(Config):
     """
