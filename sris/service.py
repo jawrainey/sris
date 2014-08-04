@@ -11,9 +11,11 @@ class SMSService:
             message (str): The SMS message content.
         """
         from twilio.rest import TwilioRestClient
-        import config
-        client = TwilioRestClient(config.ACCOUNT_SID, config.AUTH_TOKEN)
-        message = client.messages.create(to=number, from_=config.NUM,
+        from flask import current_app
+        client = TwilioRestClient(current_app.config['ACCOUNT_SID'],
+                                  current_app.config['AUTH_TOKEN'])
+        message = client.messages.create(to=number,
+                                         from_=current_app.config['NUM'],
                                          body=message)
 
     def reply(self, message):

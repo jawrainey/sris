@@ -1,9 +1,11 @@
-from sris import app, db, models
-from flask import request
+from sris import db, models
+from flask import request, Blueprint
 from manager import Manager
 
+bp = Blueprint('service', __name__)
 
-@app.route("/sms/", methods=['GET', 'POST'])
+
+@bp.route("/sms/", methods=['GET', 'POST'])
 def sms():
     """
     Responds to an SMS message sent to the service account if patient known.
@@ -12,8 +14,13 @@ def sms():
                       db.session.query(models.Patient.mobile).all()]
     number = request.values.get('From')
     message = request.values.get('Body')
+
+    if not message:
+        print 'No message was sent by the patient...'
+        return ''
+
     if number in known_patients:
-        print "Sending SMS response to %s" % (number)
+        print "Attempting to send SMS response to %s" % (number)
         return Manager().respond({'message': message, 'number': number})
     else:
         print 'Logging that an unknown patient has sent the service an SMS.' + \

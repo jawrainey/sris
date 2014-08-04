@@ -38,6 +38,7 @@ class Manager:
         message = self.messenger.respond(number, patient_message)
         self.__save_message(number, patient_message, 'received')
         self.__save_message(number, message, 'sent')
+        print 'Response constructed and about to be sent.'
         return self.sms_service.reply(message)
 
     def send_daily_sms(self):
@@ -64,10 +65,11 @@ class Manager:
         Returns:
             json: A json object of the user-defined config file.
         """
-        import config
         import json
-        _file = config.BASEDIR + '/sris/config/' + config.CLIENT_NAME + '.json'
-        with open(_file) as json_settings:
+        from flask import current_app
+        config_file = current_app.config['PROJECT_ROOT'] + '/sris/config/' + \
+            current_app.config['CLIENT_NAME'] + '.json'
+        with open(config_file) as json_settings:
             return json.load(json_settings)
 
     def __new_patients(self):
