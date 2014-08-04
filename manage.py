@@ -3,10 +3,10 @@ from sris import create_app, db
 from settings import DevConfig, ProdConfig
 import os
 
-if os.environ.get("ENV") == 'prod':
-    app = create_app(ProdConfig)
-else:
-    app = create_app(DevConfig)
+# if os.environ.get("ENV") == 'prod':
+#    app = create_app(ProdConfig)
+# else:
+app = create_app(DevConfig)
 
 
 def _context():
