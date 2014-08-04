@@ -5,7 +5,7 @@ from manager import Manager
 bp = Blueprint('service', __name__)
 
 
-@bp.route("/sms/", methods=['GET', 'POST'])
+@bp.route("/sms/", methods=['POST'])
 def sms():
     """
     Responds to an SMS message sent to the service account if patient known.
