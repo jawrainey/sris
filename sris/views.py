@@ -12,7 +12,7 @@ def sms():
     """
     known_patients = [item.mobile for item in
                       db.session.query(models.Patient.mobile).all()]
-    number = request.values.get('From')
+    number = request.values.get('From').replace('+', '')
     message = request.values.get('Body')
 
     if number in known_patients:
