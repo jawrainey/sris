@@ -1,5 +1,5 @@
 from sris import db, models
-from flask import request, Blueprint
+from flask import request, Blueprint, make_response
 from manager import Manager
 
 bp = Blueprint('service', __name__)
@@ -21,7 +21,8 @@ def sms():
 
     if number in known_patients:
         print "Attempting to send SMS response to %s" % (number)
-        return Manager().respond({'message': message, 'number': number})
+        return make_response(Manager().respond(
+            {'message': message, 'number': number}))
     else:
         print 'Logging that an unknown patient has sent the service an SMS.' + \
             'Their mobile number and message was: %s, %s' % (number, message)
