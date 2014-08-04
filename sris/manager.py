@@ -66,9 +66,8 @@ class Manager:
         """
         import config
         import json
-        config_file = config.CLIENT_NAME + '.json'
-        basedir = '/Users/jawrainey/Dropbox/dev/summer-ra/sris/sris/'
-        with open(basedir + 'config/' + config_file) as json_settings:
+        _file = config.BASEDIR + '/sris/config/' + config.CLIENT_NAME + '.json'
+        with open(_file) as json_settings:
             return json.load(json_settings)
 
     def __new_patients(self):
