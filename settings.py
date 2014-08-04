@@ -13,6 +13,10 @@ class Config(object):
     CLIENT_NAME = 'client'
     SERVICE_NAME = 'service'
 
+    # These need to be set by you!
+    ACCOUNT_SID = ''
+    AUTH_TOKEN = ''
+    NUM = ''
 
 class ProdConfig(Config):
     """
