@@ -15,6 +15,9 @@ class Manager:
     def send_initial_sms(self):
         """
         Sends an 'initial' SMS to new patients of the client.
+
+        Note: this is REQUIRED otherwise 'respond' & other services do not
+        function as database errors are thrown (understandably).
         """
         # New patients are those that have recently been added
         # to the clients database, which the service does not know.
