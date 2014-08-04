@@ -4,3 +4,4 @@ Flask-SQLAlchemy==1.0
 twilio==3.6.6
 textblob==0.8.4
 gunicorn==19.1.0
+psycopg2==2.4.4
