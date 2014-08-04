@@ -14,9 +14,10 @@ class Config(object):
     SERVICE_NAME = 'service'
 
     # These need to be set by you!
-    ACCOUNT_SID = ''
-    AUTH_TOKEN = ''
-    NUM = ''
+    ACCOUNT_SID = 'ACe5aeca75999845ce0130f7176cae9e6d'
+    AUTH_TOKEN = '905ec14da5a8c4a121b88ec0dbbf6bb3'
+    NUM = '+441508292049'
+
 
 class ProdConfig(Config):
     """
@@ -25,7 +26,7 @@ class ProdConfig(Config):
     Args:
         Config (object): Inherit the default shared configuration settings.
     """
-    DEBUG = False
+    DEBUG = True
     # These are set server-side for ease-of-use when using PaaS.
     SQLALCHEMY_BINDS = {
         Config.CLIENT_NAME: os.environ.get('CLIENT_DATABASE_URL', None),

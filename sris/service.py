@@ -30,5 +30,6 @@ class SMSService:
         """
         import twilio.twiml
         response = twilio.twiml.Response()
+        print 'The response body is: ' + str(response.body)
         response.message(message)
         return str(response)

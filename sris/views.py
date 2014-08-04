@@ -13,11 +13,7 @@ def sms():
     known_patients = [item.mobile for item in
                       db.session.query(models.Patient.mobile).all()]
     number = request.values.get('From')
-    message = request.values.get('Body')
-
-    if not message:
-        print 'No message was sent by the patient...'
-        return ''
+    message = request.values.get('Body', 'A Lovely day, is it not?')
 
     if number in known_patients:
         print "Attempting to send SMS response to %s" % (number)
