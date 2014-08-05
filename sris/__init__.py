@@ -8,15 +8,12 @@ def __perform_timed_services():
     Required to invoke the daily check to send the initial sms to new patients.
     """
     import threading
-    import settings
-    from datetime import datetime
     from sris import manager
     man = manager.Manager()
     # Send client-defined SMS to all patients at pre-defined time.
     man.send_daily_sms()
     # Sends the initial SMS to all new patients.
-    if str(datetime.now().time())[0:5] == settings.NEW_PATIENT_CHECK:
-        man.send_initial_sms()
+    man.send_initial_sms()
     threading.Timer(30, __perform_timed_services).start()
 
 

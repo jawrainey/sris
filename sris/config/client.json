@@ -1,5 +1,10 @@
 {
-  "initialQuestion": "Hello, last night you visited the ATC. This is a follow-up message to make sure everything is ok. Are you well?",
+  "initialQuestion": [
+    {
+      "time": "11:55",
+      "question": "Hello, last night you visited the ATC. This is a follow-up message to make sure everything is ok. Are you well?"
+    }
+  ],
   "dailyQuestions": [
     {
       "time": "13:20",

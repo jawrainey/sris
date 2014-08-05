@@ -14,18 +14,23 @@ class Manager:
 
     def send_initial_sms(self):
         """
-        Sends an 'initial' SMS to new patients of the client.
+        Sends the initial SMS to new* patients at a pre-defined client time.
+
+        *New patients are those that have recently been added
+        to the clients database, which the service does not know.
 
         Note: this is REQUIRED otherwise 'respond' & other services do not
         function as database errors are thrown (understandably).
         """
-        # New patients are those that have recently been added
-        # to the clients database, which the service does not know.
-        for number in self.__new_patients():
-            message = self.messenger.initial_message()
-            self.sms_service.send(number, message)
-            self.__create_new_patient(number)
-            self.__save_message(number, message, 'sent')
+        from datetime import datetime
+        current_time = str(datetime.now().time())[0:5]
+        # Send the message to new patients at the defined time.
+        if current_time == self.config['initialQuestion'][0]['time']:
+            for number in self.__new_patients():
+                message = self.messenger.initial_message()
+                self.sms_service.send(number, message)
+                self.__create_new_patient(number)
+                self.__save_message(number, message, 'sent')
 
     def respond(self, patient_response):
         """

@@ -7,7 +7,6 @@ class Config(object):
     """
     # Service settings
     PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    NEW_PATIENT_CHECK = '10:00'
 
     # Database settings
     CLIENT_NAME = 'client'
