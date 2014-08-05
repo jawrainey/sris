@@ -9,7 +9,11 @@ else:
     app = create_app(DevConfig)
 
 
-def _timed_services():
+man = Manager(app)
+
+
+@man.command
+def timed_services():
     """
     Required to invoke the daily check to send the initial sms to new patients.
     """
@@ -20,7 +24,7 @@ def _timed_services():
         man.send_initial_sms()
         # TODO: Better error checking
         # i.e. do not re-send the daily SMS if it has already been sent.
-        threading.Timer(30, _timed_services).start()
+        threading.Timer(30, timed_services).start()
 
 
 def _context():
@@ -32,9 +36,7 @@ def _context():
     """
     return {'app': app, 'db': db}
 
-man = Manager(app)
 man.add_command('shell', Shell(make_context=_context))
 
 if __name__ == '__main__':
-    _timed_services()
     man.run()
