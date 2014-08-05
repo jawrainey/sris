@@ -1,5 +1,5 @@
 from flask.ext.script import Manager, Shell
-from sris import create_app, db
+from sris import create_app, db, manager
 from settings import DevConfig, ProdConfig
 import os
 
@@ -7,6 +7,20 @@ if os.environ.get("ENV") == 'prod':
     app = create_app(ProdConfig)
 else:
     app = create_app(DevConfig)
+
+
+def _timed_services():
+    """
+    Required to invoke the daily check to send the initial sms to new patients.
+    """
+    with app.app_context():
+        import threading
+        man = manager.Manager()
+        man.send_daily_sms()
+        man.send_initial_sms()
+        # TODO: Better error checking
+        # i.e. do not re-send the daily SMS if it has already been sent.
+        threading.Timer(30, _timed_services).start()
 
 
 def _context():
@@ -18,8 +32,9 @@ def _context():
     """
     return {'app': app, 'db': db}
 
-manager = Manager(app)
-manager.add_command('shell', Shell(make_context=_context))
+man = Manager(app)
+man.add_command('shell', Shell(make_context=_context))
 
 if __name__ == '__main__':
-    manager.run()
+    _timed_services()
+    man.run()
