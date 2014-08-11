@@ -49,22 +49,36 @@ class Manager:
         print 'Response constructed and about to be sent.'
         return self.sms_service.reply(message)
 
-    def send_daily_sms(self):
+    def send_question_sms(self):
         """
-        Sends a question/message to all patients at a pre-defined time.
+        Sends a question to all patients at a pre-defined day and time.
         """
         known_patients = [item.mobile for item in
                           db.session.query(models.Patient.mobile).all()]
         from datetime import datetime
-        print "Check to see if daily question needs to be sent."
-        for number in known_patients:
-            for question in self.config['dailyQuestions']:
-                if str(datetime.now().time())[0:5] == str(question['time']):
-                    message = question['question']
-                    print "Sending a client-defined question (%s) " \
-                        "at a defined time (%s)" % (question['time'], message)
-                    self.__save_message(number, message, 'sent')
-                    self.sms_service.send(number, message)
+        print "Checking to see if open-ended question should be sent."
+        isDay = datetime.now().strftime("%A") in self.config["daysToSend"]
+        isTime = str(datetime.now().time())[0:5] == self.config["sendTime"]
+        if isDay and isTime:
+            for number in known_patients:
+                client_questions = self.config['questions']
+                sent_questions = [item.message for item in db.session.query(
+                    models.Message).filter_by(mobile=number).all()]
+                unsent_questions = list(
+                    set(client_questions).difference(sent_questions))
+
+                import random
+                if unsent_questions:
+                    print "Sending a message that HAS NOT been previously sent."
+                    message = random.choice(unsent_questions)
+                else:
+                    print "Sending a message that HAS been previously sent."
+                    message = random.choice(client_questions)
+
+                print "Sending open-ended question (%s) to client (%s)." \
+                    % (message, number)
+                self.__save_message(number, message, 'sent')
+                self.sms_service.send(number, message)
 
     def __load_config_file(self):
         """

@@ -20,7 +20,7 @@ def timed_services():
     with app.app_context():
         import threading
         man = manager.Manager()
-        man.send_daily_sms()
+        man.send_question_sms()
         man.send_initial_sms()
         # TODO: Better error checking
         # i.e. do not re-send the daily SMS if it has already been sent.

@@ -5,12 +5,15 @@
       "question": "Hello, last night you visited the ATC. This is a follow-up message to make sure everything is ok. Are you well?"
     }
   ],
-  "dailyQuestions": [
-    {
-      "time": "13:20",
-      "question": "This is the ATC helper. How many units of alcohol did you drink yesterday? 1 unit is a half a pint of beer, small wine or a single shot."
-    }
-  ],
+  "daysToSend": ["Sunday", "Tuesday", "Friday", "Saturday"],
+  "sendTime": "18:30",
+  "questions": [
+    "How do you feel about your current alcohol use?",
+    "What worries do you have about your alcohol use?",
+    "What would you like to do about your alcohol use?",
+    "What might make you want to reduce your drinking?",
+    "What makes you feel that now is a good time to reduce your alcohol use?",
+    "What do you know about the risks of drinking too much alcohol?"
   "interventionQuestions": [
     "Did you know that only 6.4% of dependent drinkers access treatment? If you need help, text HELP and a support nurse will be in touch.",
     "Did you know that in 2011 there were 8748 deaths directly related to alcohol in the UK.",
