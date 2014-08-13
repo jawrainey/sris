@@ -1,6 +1,3 @@
-from sentiment import Sentiment
-
-
 class Messenger:
     """
     Generates messages to send to a patient.
@@ -11,7 +8,7 @@ class Messenger:
 
         Args:
             config (json): Client specific configuration file that contains
-            the responses to pass to the service.
+            the questions to send to the user.
         """
         self.config = config
 
@@ -25,27 +22,63 @@ class Messenger:
         print "The initial message is being sent."
         return self.config['initialQuestion']
 
-    def respond(self, number, message):
+    def summary(self, message):
         """
-        Obtains a suitable response from the client defined settings based on
-        the sentiment (positive/negative) of the message that the patient sent.
+        Constructs a reflective summary of the message received. This is used
+        to empathises with the patient, and highlight understanding of the
+        problem from the service side by providing a reflection summary.
+
+        This method uses the Bag-of-words model to obtain emotions & concepts of
+        the message, which is then used to select an appropriate response.
 
         Args:
-            number (str): The mobile number of the patient.
-            message (str): The last message received from the patient.
+            message (str): The message received from the patient.
 
         Returns:
-            str: A message to continue the conversation with the patient.
+            str: A reflective summary of the message received.
         """
-        print "The message from the patient was: %s" % (message)
-        sentiment = Sentiment().determine_sentiment(message)
-        print "The sentiment generated for the response was: %s" % (sentiment)
+        # The client defined reflective responses.
+        concept_responses = self.config['conceptResponses']
+        emotion_responses = self.config['emotionResponses']
+        # The ontology of emotions & concepts
+        ontology = self.__load_ontology()
+        # Discover which emotions and concepts are in the patient's sms.
+        emotions = self.__category_in_sms(ontology.get('emotions'), message)
+        concepts = self.__category_in_sms(ontology.get('concepts'), message)
+        # Select a reflective summary as a response best suited to the category
         import random
-
-        # TODO:
-        #   - Filter so all interventions/responses are used before repeating.
-        #   - Select a response for the given message (rather than randomly).
-        if sentiment is 'pos':
-            return self.config['positiveResponses'][0]
+        if concepts:
+            response = random.choice(concept_responses) % (concepts[0])
         else:
-            return self.config['interventionQuestions'][random.randint(0, 1)]
+            response = random.choice(emotion_responses) % (emotions[0])
+        return response
+
+    def __load_ontology(self):
+        """
+        Stores the contents of the service-defined ontology in a json object.
+
+        Returns:
+            json: A json object of the user-defined config file.
+        """
+        from flask import current_app
+        import json
+        with open(current_app.config['SERVICE_ONTOLOGY']) as ontology:
+            return json.load(ontology)
+
+    def __category_in_sms(self, category, message):
+        """
+        Obtain the specific category/categories (emotions or concepts)
+
+        Args:
+            category (json): Categories (i.e. emotions) and related words
+            message (str): The message received from the patient.
+
+        Returns:
+            categories (list): The categories found in the ontology.
+        """
+        categories = []
+        for conemo, words in category.iteritems():
+            for word in words:
+                if word in message:
+                    categories.append(conemo)
+        return categories

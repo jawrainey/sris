@@ -2,7 +2,7 @@
   "initialQuestion": [
     {
       "time": "11:55",
-      "question": "Hello, last night you visited the ATC. This is a follow-up message to make sure everything is ok. Are you well?"
+      "question": "Hello, last night you visited the ATC. This is a follow-up message to let you know that we will be in touch to help you over the coming weeks"
     }
   ],
   "daysToSend": ["Sunday", "Tuesday", "Friday", "Saturday"],
@@ -14,12 +14,11 @@
     "What might make you want to reduce your drinking?",
     "What makes you feel that now is a good time to reduce your alcohol use?",
     "What do you know about the risks of drinking too much alcohol?"
-  "interventionQuestions": [
-    "Did you know that only 6.4% of dependent drinkers access treatment? If you need help, text HELP and a support nurse will be in touch.",
-    "Did you know that in 2011 there were 8748 deaths directly related to alcohol in the UK.",
-    "Did you know that 37% of all deaths from liver disease in England are a result of overconsumption of alcohol."
+  ]
+  "emotionResponses": [
+    "Why does that make you feel %s?"
   ],
-  "positiveResponses": [
-    "This is a general positive response."
+  "conceptResponses": [
+    "How do you think that affects your %s?"
   ]
 }
