@@ -42,6 +42,8 @@ class Messenger:
         emotion_responses = self.config['emotionResponses']
         # The ontology of emotions & concepts
         ontology = self.__load_ontology()
+        # Words in the sentence appear in the ontology regardless of case.
+        message = message.lower()
         # Discover which emotions and concepts are in the patient's sms.
         emotions = self.__category_in_sms(ontology.get('emotions'), message)
         concepts = self.__category_in_sms(ontology.get('concepts'), message)
