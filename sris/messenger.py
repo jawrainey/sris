@@ -60,9 +60,9 @@ class Messenger:
         Returns:
             json: A json object of the user-defined config file.
         """
-        from flask import current_app
+        import settings
         import json
-        with open(current_app.config['SERVICE_ONTOLOGY']) as ontology:
+        with open(settings.Config.SERVICE_ONTOLOGY) as ontology:
             return json.load(ontology)
 
     def __category_in_sms(self, category, message):
