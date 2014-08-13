@@ -51,8 +51,12 @@ class Messenger:
         import random
         if concepts:
             response = random.choice(concept_responses) % (concepts[0])
-        else:
+        elif emotions:
             response = random.choice(emotion_responses) % (emotions[0])
+        else:
+            # A naive general response if no emotions or concepts detected.
+            response = ("Could you explain that further?")
+
         return response
 
     def __load_ontology(self):
