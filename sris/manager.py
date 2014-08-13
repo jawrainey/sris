@@ -43,7 +43,7 @@ class Manager:
         number = patient_response['number']
         patient_message = patient_response['message']
         # Generate a reflective summary based on the patient's response.
-        message = self.messenger.summary(number, patient_message)
+        message = self.messenger.summary(patient_message)
         self.__save_message(number, patient_message, 'received')
         self.__save_message(number, message, 'sent')
         print 'Response constructed and about to be sent.'
