@@ -48,15 +48,15 @@ class Messenger:
         from collections import Counter
         if emotions:  # First as emotions are more important than concepts.
             freq = Counter(emotions)
-            most_common = freq.most_common()[0]
+            mc_emotion, mc_value = freq.most_common()[0]
             # Check if multiple emotions exist with same (max) frequency
-            if len([v for v in freq.values() if v == most_common[1]]) >= 2:
+            if len([v for v in freq.values() if v == mc_value]) >= 2:
                 # If they do, select the first that occurs in the ordered list.
                 order_of_emotion = self.config['orderOfEmotions']
                 emotion = [i for i in order_of_emotion if i in freq.keys()][0]
             else:
                 # Otherwise, use the most frequent emotion.
-                emotion = most_common[0]
+                emotion = mc_emotion
             print 'The most frequent emotion was: %s' % emotion
             response = self.config['emotionResponses'][emotion] % emotion
         elif concepts:
