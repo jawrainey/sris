@@ -25,7 +25,7 @@ class Manager:
         from datetime import datetime
         current_time = str(datetime.now().time())[0:5]
         # Send the message to new patients at the defined time.
-        if current_time == self.config['initialQuestion'][0]['time']:
+        if current_time == self.config['initialQuestion']['time']:
             for number in self.__new_patients():
                 message = self.messenger.initial_message()
                 self.sms_service.send(number, message)
