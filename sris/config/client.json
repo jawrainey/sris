@@ -1,7 +1,7 @@
 {
   "initialQuestion": {
-      "time": "11:55",
-      "question": "Hello, last night you visited the ATC. This is a follow-up message to let you know that we will be in touch to help you over the coming weeks"
+    "time": "11:55",
+    "question": "Hello, last night you visited the ATC. This is a follow-up message to let you know that we will be in touch to help you over the coming weeks"
   },
   "daysToSend": ["Sunday", "Tuesday", "Friday", "Saturday"],
   "sendTime": "18:30",
@@ -13,10 +13,18 @@
     "What makes you feel that now is a good time to reduce your alcohol use?",
     "What do you know about the risks of drinking too much alcohol?"
   ],
-  "emotionResponses": [
-    "Why does that make you feel %s?"
-  ],
-  "conceptResponses": [
-    "How do you think that affects your %s?"
-  ]
+  "generalResponse": "Could you explain that further?",
+  "emotionResponses": {
+    "happy": "INSIDE HAPPY: Why does that make you feel %s?",
+    "surprised": "INSIDE SURPRISED: Why does that make you feel %s?",
+    "sad": "INSIDE SAD: Why does that make you feel %s?",
+    "angry": "INSIDE ANGRY: Why does that make you feel %s?"
+  },
+  "conceptResponses": {
+    "family": "INSIDE FAMILY: How do you think that affects your %s?",
+    "friends": "INSIDE FRIENDS: How do you think that affects your %s?",
+    "finance": "INSIDE FINANCE: How do you think that affects your %s?",
+    "health": "INSIDE HEALTH: How do you think that affects your %s?",
+    "injury": "INSIDE INJURY: How do you think that affects your %s?"
+  }
 }

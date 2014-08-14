@@ -37,26 +37,27 @@ class Messenger:
         Returns:
             str: A reflective summary of the message received.
         """
-        # The client defined reflective responses.
-        concept_responses = self.config['conceptResponses']
-        emotion_responses = self.config['emotionResponses']
         # The ontology of emotions & concepts
         ontology = self.__load_ontology()
         # Words in the sentence appear in the ontology regardless of case.
         message = message.lower()
+        print 'The message to be summarized is: %s' % message
         # Discover which emotions and concepts are in the patient's sms.
         emotions = self.__category_in_sms(ontology.get('emotions'), message)
         concepts = self.__category_in_sms(ontology.get('concepts'), message)
-        # Select a reflective summary as a response best suited to the category
-        import random
-        if concepts:
-            response = random.choice(concept_responses) % (concepts[0])
-        elif emotions:
-            response = random.choice(emotion_responses) % (emotions[0])
+        from collections import Counter
+        # Emotions are considered more important than concepts.
+        if emotions:
+            emotion = Counter(emotions).most_common()[0][0]
+            print 'The most frequent emotion was: %s' % emotion
+            response = self.config['emotionResponses'][emotion] % emotion
+        elif concepts:
+            concept = Counter(concepts).most_common()[0][0]
+            print 'The most frequent concept was: %s' % concept
+            response = self.config['conceptResponses'][concept] % concept
         else:
-            # A naive general response if no emotions or concepts detected.
-            response = ("Could you explain that further?")
-
+            print 'No emotions/concepts were detected.'
+            response = self.config['generalResponse']
         return response
 
     def __load_ontology(self):
