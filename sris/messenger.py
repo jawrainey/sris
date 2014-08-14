@@ -95,5 +95,5 @@ class Messenger:
         for conemo, words in category.iteritems():
             for word in words:
                 if word in message:
-                    categories.append(conemo)
+                    categories.extend([conemo] * message.count(word))
         return categories
