@@ -5,6 +5,7 @@
   },
   "daysToSend": ["Sunday", "Tuesday", "Friday", "Saturday"],
   "sendTime": "18:30",
+  "orderOfEmotions": ["happy", "surprised", "sad", "angry"],
   "questions": [
     "How do you feel about your current alcohol use?",
     "What worries do you have about your alcohol use?",

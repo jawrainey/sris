@@ -46,9 +46,17 @@ class Messenger:
         emotions = self.__category_in_sms(ontology.get('emotions'), message)
         concepts = self.__category_in_sms(ontology.get('concepts'), message)
         from collections import Counter
-        # Emotions are considered more important than concepts.
-        if emotions:
-            emotion = Counter(emotions).most_common()[0][0]
+        if emotions:  # First as emotions are more important than concepts.
+            freq = Counter(emotions)
+            most_common = freq.most_common()[0]
+            # Check if multiple emotions exist with same (max) frequency
+            if len([v for v in freq.values() if v == most_common[1]]) >= 2:
+                # If they do, select the first that occurs in the ordered list.
+                order_of_emotion = self.config['orderOfEmotions']
+                emotion = [i for i in order_of_emotion if i in freq.keys()][0]
+            else:
+                # Otherwise, use the most frequent emotion.
+                emotion = most_common[0]
             print 'The most frequent emotion was: %s' % emotion
             response = self.config['emotionResponses'][emotion] % emotion
         elif concepts:
