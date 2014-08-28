@@ -12,7 +12,7 @@ class Manager:
         self.messenger = Messenger(self.config)
         self.sms_service = SMSService()
 
-    def send_initial_sms(self):
+    def send_initial_greeting(self):
         """
         Sends the initial SMS to new* patients at a pre-defined client time.
 
@@ -34,11 +34,14 @@ class Manager:
 
     def respond(self, patient_response):
         """
-        Respond to new SMS when it is received.
+        Respond to new SMS when it is received via a POST request.
 
         Args:
             patient_message (dict): Contains the number, and message sent to
             the service by a patient.
+
+        Returns:
+            response (XML): twilio formatted response.
         """
         number = patient_response['number']
         patient_message = patient_response['message']
@@ -49,7 +52,7 @@ class Manager:
         print 'Response constructed and about to be sent.'
         return self.sms_service.reply(message)
 
-    def send_question_sms(self):
+    def send_initial_question_to_all(self):
         """
         Sends a question to all patients at a pre-defined day and time.
         """

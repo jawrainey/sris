@@ -26,7 +26,7 @@ class SMSService:
             message (str): The message to send.
 
         Returns:
-            response (str): XML twilio formatted response.
+            response (XML): twilio formatted response.
         """
         import twilio.twiml
         response = twilio.twiml.Response()

@@ -64,7 +64,7 @@ class Messenger:
             print 'The most frequent concept was: %s' % concept
             response = self.config['conceptResponses'][concept] % concept
         else:
-            print 'No emotions/concepts were detected.'
+            print 'No emotions/concepts detected. Message was: %s' % (message)
             response = self.config['generalResponse']
         return response
 
