@@ -47,11 +47,37 @@ class Manager:
         number = patient_response['number']
         patient_message = patient_response['message']
         # Generate a reflective summary based on the patient's response.
-        message = self.messenger.summary(patient_message)
-        self.__save_message(number, patient_message, 'received')
-        self.__save_message(number, message, 'sent')
-        print 'Response constructed and about to be sent.'
-        return self.sms_service.reply(message)
+        summary = self.messenger.summary(patient_message)
+        # TODO: Fix this with the system set time (i.e. UTC)
+        midnight = int(datetime.today().strftime("%s")) - 24*60*60
+        print 'The timestamp for midnight was: ' + str(midnight)
+        # The number of questions sent since last night.
+        questions = db.session.query(models.Message).filter(
+            models.Message.mobile == number,
+            models.Message.status == 'sent',
+            models.Message.timestamp >= midnight).all()
+        num_oeq = len(questions)  # OEQ is Open-Ended Question(s)
+        print 'Number questions sent since last night was: %s' % num_oeq
+        response = None
+        if num_oeq == 1:
+            print 'Sending reflective summary to patient response to OEQ.'
+            response = summary
+        elif num_oeq >= 2 and num_oeq < int(self.config['limit']):
+            # If a user responds to the first reflective summary then they are
+            # actively participating in the conversation, so another question is
+            # asked. This continues until the daily limit is met.
+            message = self.__select_question(number)
+            print 'Sending RS & OEQ (%s) to patient (%s).' % (message, number)
+            response = summary + '\n\n' + message
+
+        if response:
+            self.__save_message(number, patient_message, 'received')
+            self.__save_message(number, response, 'sent')
+            print 'Response saved to database and about to be sent.'
+            return self.sms_service.reply(response)
+        else:
+            print 'Daily question limit was met, so no response was sent.'
+            return ''  # Prevents a 500 error code returned to POST.
 
     def send_initial_question_to_all(self):
         """
