@@ -24,7 +24,7 @@ def timed_services():
         man.send_initial_question_to_all()
         # TODO: Better error checking
         # i.e. do not re-send the daily SMS if it has already been sent.
-        threading.Timer(30, timed_services).start()
+        threading.Timer(60, timed_services).start()
 
 
 def _context():
