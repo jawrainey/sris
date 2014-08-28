@@ -1,6 +1,7 @@
 from sris import db, models
 from messenger import Messenger
 from service import SMSService
+from datetime import datetime
 
 
 class Manager:
@@ -64,24 +65,35 @@ class Manager:
         isTime = str(datetime.now().time())[0:5] == self.config["sendTime"]
         if isDay and isTime:
             for number in known_patients:
-                client_questions = self.config['questions']
-                sent_questions = [item.message for item in db.session.query(
-                    models.Message).filter_by(mobile=number).all()]
-                unsent_questions = list(
-                    set(client_questions).difference(sent_questions))
-
-                import random
-                if unsent_questions:
-                    print "Sending a message that HAS NOT been previously sent."
-                    message = random.choice(unsent_questions)
-                else:
-                    print "Sending a message that HAS been previously sent."
-                    message = random.choice(client_questions)
-
-                print "Sending open-ended question (%s) to client (%s)." \
-                    % (message, number)
+                message = self.__select_question(number)
+                print "OEQ (%s) to patient (%s)." % (message, number)
                 self.__save_message(number, message, 'sent')
                 self.sms_service.send(number, message)
+
+    def __select_question(self, number):
+        """
+        Select a client-defined open-ended question that has not been previously
+        selected at random. If all have been sent then select one at random.
+
+        Args:
+            number (str): The mobile number of the patient.
+
+        Returns:
+            str: An open-ended question to ask the patient.
+        """
+        questions = self.config['questions']
+        sent_questions = [item.message for item in db.session.query(
+            models.Message).filter(models.Message.mobile == number).all()]
+        unsent_questions = list(set(questions).difference(sent_questions))
+        # TODO: Select most important question based on client's situation
+        import random
+        if unsent_questions:
+            print "Sending a message that HAS NOT been previously sent."
+            message = random.choice(unsent_questions)
+        else:
+            print "Sending a message that HAS been previously sent."
+            message = random.choice(questions)
+        return message
 
     def __load_config_file(self):
         """
