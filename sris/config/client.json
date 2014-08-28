@@ -17,16 +17,36 @@
   ],
   "generalResponse": "Could you explain that further?",
   "emotionResponses": {
-    "happy": "INSIDE HAPPY: Why does that make you feel %s?",
-    "surprised": "INSIDE SURPRISED: Why does that make you feel %s?",
-    "sad": "INSIDE SAD: Why does that make you feel %s?",
-    "angry": "INSIDE ANGRY: Why does that make you feel %s?"
+    "happy": [
+      "Why does that make you feel feel?",
+      "That's great! I'm glad that makes you happy."
+    ],
+    "surprised": [
+      "Why does that make you feel surprised?",
+      "Ohhh! I understand, I have been in similar situations"
+    ],
+    "sad": [
+      "Why does that make you feel sad?",
+      "I'm sorry to hear that. Things will get better with time."
+    ],
+    "angry": [
+      "Why does that make you feel angry?",
+      "How do you plan to manage your anger about that?"
+    ]
   },
   "conceptResponses": {
-    "family": "INSIDE FAMILY: How do you think that affects your %s?",
-    "friends": "INSIDE FRIENDS: How do you think that affects your %s?",
-    "finance": "INSIDE FINANCE: How do you think that affects your %s?",
-    "health": "INSIDE HEALTH: How do you think that affects your %s?",
-    "injury": "INSIDE INJURY: How do you think that affects your %s?"
+    "family": [
+      "How do you think that affects your family?"
+    ],
+    "friends": [
+      "How do you think that affects your friends?"
+    ],
+    "finance": [
+      "How do you think that affects your financial situation?",
+      "What impact do you think that has on your financial situation?"
+    ],
+    "injury": [
+      "How do you think that affects your body?"
+    ]
   }
 }

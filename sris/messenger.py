@@ -45,6 +45,10 @@ class Messenger:
         # Discover which emotions and concepts are in the patient's sms.
         emotions = self.__category_in_sms(ontology.get('emotions'), message)
         concepts = self.__category_in_sms(ontology.get('concepts'), message)
+        import random
+        # TODO: Improve the selection of emotions/concepts to not be random.
+        # Instead, previously un-used reflections should be used, then repeat.
+        # Ideally, a suitable one for that specific emotion/concept is selected.
         from collections import Counter
         if emotions:  # First as emotions are more important than concepts.
             freq = Counter(emotions)
@@ -58,11 +62,11 @@ class Messenger:
                 # Otherwise, use the most frequent emotion.
                 emotion = mc_emotion
             print 'The most frequent emotion was: %s' % emotion
-            response = self.config['emotionResponses'][emotion] % emotion
+            response = random.choice(self.config['emotionResponses'][emotion])
         elif concepts:
             concept = Counter(concepts).most_common()[0][0]
             print 'The most frequent concept was: %s' % concept
-            response = self.config['conceptResponses'][concept] % concept
+            response = random.choice(self.config['conceptResponses'][concept])
         else:
             print 'No emotions/concepts detected. Message was: %s' % (message)
             response = self.config['generalResponse']
