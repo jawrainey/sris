@@ -41,6 +41,9 @@
       "How do you think that affects your financial situation?",
       "What impact do you think that has on your financial situation?"
     ],
+    "health": [
+      "I hope that your health gets better."
+    ],
     "injury": [
       "How do you think that affects your body?"
     ]
