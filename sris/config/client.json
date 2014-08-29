@@ -18,19 +18,15 @@
   "generalResponse": "Could you explain that further?",
   "emotionResponses": {
     "happy": [
-      "Why does that make you feel feel?",
       "That's great! I'm glad that makes you happy."
     ],
     "surprised": [
-      "Why does that make you feel surprised?",
-      "Ohhh! I understand, I have been in similar situations"
+      "Ohhh! I understand, I have been in similar situations."
     ],
     "sad": [
-      "Why does that make you feel sad?",
       "I'm sorry to hear that. Things will get better with time."
     ],
     "angry": [
-      "Why does that make you feel angry?",
       "How do you plan to manage your anger about that?"
     ]
   },
