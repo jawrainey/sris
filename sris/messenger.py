@@ -20,7 +20,7 @@ class Messenger:
             str: The predefined message to send to new patients.
         """
         print "The initial message is being sent."
-        return self.config['initialQuestion']
+        return self.config['initialQuestion']['question']
 
     def summary(self, message):
         """
