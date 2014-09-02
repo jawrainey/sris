@@ -52,10 +52,11 @@ class Manager:
         midnight = int(datetime.today().strftime("%s")) - 24*60*60
         print 'The timestamp for midnight was: ' + str(midnight)
         # The number of questions sent since last night.
-        questions = db.session.query(models.Message).filter(
+        _questions = db.session.query(models.Message).filter(
             models.Message.mobile == number,
             models.Message.status == 'sent',
             models.Message.timestamp >= midnight).all()
+        questions = [item.message for item in _questions]
         num_oeq = len(questions)  # OEQ is Open-Ended Question(s)
         print 'Number questions sent since last night was: %s' % num_oeq
         response = None
@@ -63,10 +64,10 @@ class Manager:
         limit = int(self.config['limit'])
         # True if the number of OEQs has reached the limit
         isLimitMet = (num_oeq < limit)
+        # No emotions/concepts detected in the summary. General response used.
+        isGeneralResponse = (summary == self.config['generalResponse'])
 
-        # Do not send an OEQ and the clarification response.
-        if num_oeq == 1 or (summary == self.config['generalResponse']
-                            and isLimitMet):
+        if num_oeq == 1 or (isGeneralResponse and isLimitMet):
             print 'Sending reflective summary to patient response to OEQ.'
             response = summary
         elif num_oeq >= 2 and isLimitMet:
@@ -76,6 +77,10 @@ class Manager:
             message = self.__select_question(number)
             print 'Sending RS & OEQ (%s) to patient (%s).' % (message, number)
             response = summary + '\n\n' + message
+
+        if not isLimitMet and self.config['endQuestion'] not in questions:
+            print 'Limit met: sending closing message.'
+            response = self.config['endQuestion']
 
         if response:
             self.__save_message(number, patient_message, 'received')

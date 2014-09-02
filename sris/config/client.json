@@ -3,6 +3,7 @@
     "time": "11:55",
     "question": "Hello, last night you visited the ATC. This is a follow-up message to let you know that we will be in touch to help you over the coming weeks"
   },
+  "endQuestion": "Goodbye, blue sky",
   "limit": "3",
   "daysToSend": ["Sunday", "Tuesday", "Friday", "Saturday"],
   "sendTime": "18:30",
