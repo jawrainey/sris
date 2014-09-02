@@ -59,10 +59,17 @@ class Manager:
         num_oeq = len(questions)  # OEQ is Open-Ended Question(s)
         print 'Number questions sent since last night was: %s' % num_oeq
         response = None
-        if num_oeq == 1:
+        # The maximum number of open-ended questions to send per day.
+        limit = int(self.config['limit'])
+        # True if the number of OEQs has reached the limit
+        isLimitMet = (num_oeq < limit)
+
+        # Do not send an OEQ and the clarification response.
+        if num_oeq == 1 or (summary == self.config['generalResponse']
+                            and isLimitMet):
             print 'Sending reflective summary to patient response to OEQ.'
             response = summary
-        elif num_oeq >= 2 and num_oeq < int(self.config['limit']):
+        elif num_oeq >= 2 and isLimitMet:
             # If a user responds to the first reflective summary then they are
             # actively participating in the conversation, so another question is
             # asked. This continues until the daily limit is met.
