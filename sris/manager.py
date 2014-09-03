@@ -48,47 +48,47 @@ class Manager:
         patient_message = patient_response['message']
         # Generate a reflective summary based on the patient's response.
         summary = self.messenger.summary(patient_message)
+
         # TODO: Fix this with the system set time (i.e. UTC)
         midnight = int(datetime.today().strftime("%s")) - 24*60*60
-        print 'The timestamp for midnight was: ' + str(midnight)
         # The number of questions sent since last night.
         _questions = db.session.query(models.Message).filter(
             models.Message.mobile == number,
             models.Message.status == 'sent',
             models.Message.timestamp >= midnight).all()
-        questions = [item.message for item in _questions]
-        num_oeq = len(questions)  # OEQ is Open-Ended Question(s)
-        print 'Number questions sent since last night was: %s' % num_oeq
+
+        all_sent = [item.message for item in _questions]
+        # The number of OEQ sent since last night.
+        num_oeq = len([i for i in self.config['questions'] if i in all_sent])
+
+        print 'Number OEQ sent since last night was: %s' % str(num_oeq)
+
         response = None
-        # The maximum number of open-ended questions to send per day.
-        limit = int(self.config['limit'])
-        # True if the number of OEQs has reached the limit
-        isLimitMet = (num_oeq < limit)
-        # No emotions/concepts detected in the summary. General response used.
-        isGeneralResponse = (summary == self.config['generalResponse'])
 
-        if num_oeq == 1 or (isGeneralResponse and isLimitMet):
-            print 'Sending reflective summary to patient response to OEQ.'
-            response = summary
-        elif num_oeq >= 2 and isLimitMet:
-            # If a user responds to the first reflective summary then they are
-            # actively participating in the conversation, so another question is
-            # asked. This continues until the daily limit is met.
-            message = self.__select_question(number)
-            print 'Sending RS & OEQ (%s) to patient (%s).' % (message, number)
-            response = summary + '\n\n' + message
-
-        if not isLimitMet and self.config['endQuestion'] not in questions:
-            print 'Limit met: sending closing message.'
-            response = self.config['endQuestion']
+        # Do not send a response if initial daily conversation not started.
+        if num_oeq >= 1:
+            print 'The last sms sent was: %s' % all_sent[-1]
+            if all_sent[-1] in self.config['questions']:
+                print 'Last message sent was an OEQ. Sending a RS to patient.'
+                response = summary
+            else:
+                print 'Inside the else..'
+                if (num_oeq >= int(self.config['limit'])):  # True: OEQ >= LIMIT
+                    print 'Inside the else... in the if...'
+                    if self.config['endQuestion'] not in all_sent:
+                        print 'Sending the conversation closer as limit met.'
+                        response = self.config['endQuestion']
+                else:
+                    print 'Message received was response to a RS. Sending OEQ.'
+                    response = self.__select_question(number)
 
         if response:
             self.__save_message(number, patient_message, 'received')
             self.__save_message(number, response, 'sent')
-            print 'Response saved to database and about to be sent.'
+            print 'The response (%s) has been saved to the database.' % response
             return self.sms_service.reply(response)
         else:
-            print 'Daily question limit was met, so no response was sent.'
+            print 'No response was created.'
             return ''  # Prevents a 500 error code returned to POST.
 
     def send_initial_question_to_all(self):
