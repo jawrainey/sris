@@ -3,7 +3,7 @@
     "time": "11:55",
     "question": "Hello, last night you visited the ATC. This is a follow-up message to let you know that we will be in touch to help you over the coming weeks."
   },
-  "endQuestion": "Goodbye, blue sky",
+  "endQuestion": "It was nice talking to you. I will get in touch soon to continue our conversation. Speak to you then.",
   "limit": "3",
   "daysToSend": ["Sunday", "Tuesday", "Friday", "Saturday"],
   "sendTime": "18:30",
@@ -13,13 +13,14 @@
     "What worries do you have about your alcohol use?",
     "What would you like to do about your alcohol use?",
     "What might make you want to reduce your drinking?",
-    "What makes you feel that now is a good time to reduce your alcohol use?",
-    "What do you know about the risks of drinking too much alcohol?"
+    "How would your life be different if you were to change your drinking?",
+    "What do you like and dislike about your drinking habits?"
   ],
   "generalResponse": "Could you explain that further?",
   "emotionResponses": {
     "happy": [
-      "That's great! I'm glad that makes you happy."
+      "That's great! I'm glad that makes you happy.",
+      "What I hear you saying is that is that reducing your alcohol intake will make you happier."
     ],
     "surprised": [
       "Ohhh! I understand, I have been in similar situations."
@@ -33,7 +34,7 @@
   },
   "conceptResponses": {
     "family": [
-      "How do you think that affects your family?"
+      "What I hear you saying is that your drinking affects the time you spend with your family."
     ],
     "friends": [
       "How do you think that affects your friends?"
